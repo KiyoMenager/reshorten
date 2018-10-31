@@ -13,7 +13,7 @@ RSpec.describe Link, type: :model do
 
   describe '.short_code generation' do
     it 'should be url safe' do
-      expect(link.short_code).to match(/\A[0-9a-zA-Z_]+\z/)
+      expect(link.short_code).to match(/\A[0-9a-zA-Z_-]+\z/)
     end
 
     it 'should have length of 6' do
