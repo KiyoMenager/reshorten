@@ -6,9 +6,15 @@ RSpec.describe 'Redirections API', type: :request do
   let(:link_short_code) { link.short_code }
 
   describe 'GET /:short_code' do
-    before { get "/#{link_short_code}" }
+
+    it 'is monitored, calling Links::Redirection' do
+      expect(Links::UrlRedirect).to receive(:call!).with(link.short_code).and_return(link.url)
+      get "/#{link_short_code}"
+    end
 
     context 'when the link exists' do
+      before { get "/#{link_short_code}" }
+
       it 'redirects to the link url' do
         expect(response).to redirect_to(link.url)
       end
@@ -19,6 +25,8 @@ RSpec.describe 'Redirections API', type: :request do
     end
 
     context 'when the link does not exist' do
+      before { get "/#{link_short_code}" }
+
       let(:link_short_code) { 'unknown' }
 
       it 'returns status 404' do
